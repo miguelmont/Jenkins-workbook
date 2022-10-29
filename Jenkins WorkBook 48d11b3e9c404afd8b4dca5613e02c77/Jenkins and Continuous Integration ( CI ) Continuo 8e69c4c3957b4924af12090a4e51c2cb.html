@@ -1,0 +1,840 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/><title>Jenkins and Continuous Integration ( CI ) / Continuous Delivery ( CD )</title><style>
+/* cspell:disable-file */
+/* webkit printing magic: print all background colors */
+html {
+	-webkit-print-color-adjust: exact;
+}
+* {
+	box-sizing: border-box;
+	-webkit-print-color-adjust: exact;
+}
+
+html,
+body {
+	margin: 0;
+	padding: 0;
+}
+@media only screen {
+	body {
+		margin: 2em auto;
+		max-width: 900px;
+		color: rgb(55, 53, 47);
+	}
+}
+
+body {
+	line-height: 1.5;
+	white-space: pre-wrap;
+}
+
+a,
+a.visited {
+	color: inherit;
+	text-decoration: underline;
+}
+
+.pdf-relative-link-path {
+	font-size: 80%;
+	color: #444;
+}
+
+h1,
+h2,
+h3 {
+	letter-spacing: -0.01em;
+	line-height: 1.2;
+	font-weight: 600;
+	margin-bottom: 0;
+}
+
+.page-title {
+	font-size: 2.5rem;
+	font-weight: 700;
+	margin-top: 0;
+	margin-bottom: 0.75em;
+}
+
+h1 {
+	font-size: 1.875rem;
+	margin-top: 1.875rem;
+}
+
+h2 {
+	font-size: 1.5rem;
+	margin-top: 1.5rem;
+}
+
+h3 {
+	font-size: 1.25rem;
+	margin-top: 1.25rem;
+}
+
+.source {
+	border: 1px solid #ddd;
+	border-radius: 3px;
+	padding: 1.5em;
+	word-break: break-all;
+}
+
+.callout {
+	border-radius: 3px;
+	padding: 1rem;
+}
+
+figure {
+	margin: 1.25em 0;
+	page-break-inside: avoid;
+}
+
+figcaption {
+	opacity: 0.5;
+	font-size: 85%;
+	margin-top: 0.5em;
+}
+
+mark {
+	background-color: transparent;
+}
+
+.indented {
+	padding-left: 1.5em;
+}
+
+hr {
+	background: transparent;
+	display: block;
+	width: 100%;
+	height: 1px;
+	visibility: visible;
+	border: none;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+img {
+	max-width: 100%;
+}
+
+@media only print {
+	img {
+		max-height: 100vh;
+		object-fit: contain;
+	}
+}
+
+@page {
+	margin: 1in;
+}
+
+.collection-content {
+	font-size: 0.875rem;
+}
+
+.column-list {
+	display: flex;
+	justify-content: space-between;
+}
+
+.column {
+	padding: 0 1em;
+}
+
+.column:first-child {
+	padding-left: 0;
+}
+
+.column:last-child {
+	padding-right: 0;
+}
+
+.table_of_contents-item {
+	display: block;
+	font-size: 0.875rem;
+	line-height: 1.3;
+	padding: 0.125rem;
+}
+
+.table_of_contents-indent-1 {
+	margin-left: 1.5rem;
+}
+
+.table_of_contents-indent-2 {
+	margin-left: 3rem;
+}
+
+.table_of_contents-indent-3 {
+	margin-left: 4.5rem;
+}
+
+.table_of_contents-link {
+	text-decoration: none;
+	opacity: 0.7;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.18);
+}
+
+table,
+th,
+td {
+	border: 1px solid rgba(55, 53, 47, 0.09);
+	border-collapse: collapse;
+}
+
+table {
+	border-left: none;
+	border-right: none;
+}
+
+th,
+td {
+	font-weight: normal;
+	padding: 0.25em 0.5em;
+	line-height: 1.5;
+	min-height: 1.5em;
+	text-align: left;
+}
+
+th {
+	color: rgba(55, 53, 47, 0.6);
+}
+
+ol,
+ul {
+	margin: 0;
+	margin-block-start: 0.6em;
+	margin-block-end: 0.6em;
+}
+
+li > ol:first-child,
+li > ul:first-child {
+	margin-block-start: 0.6em;
+}
+
+ul > li {
+	list-style: disc;
+}
+
+ul.to-do-list {
+	text-indent: -1.7em;
+}
+
+ul.to-do-list > li {
+	list-style: none;
+}
+
+.to-do-children-checked {
+	text-decoration: line-through;
+	opacity: 0.375;
+}
+
+ul.toggle > li {
+	list-style: none;
+}
+
+ul {
+	padding-inline-start: 1.7em;
+}
+
+ul > li {
+	padding-left: 0.1em;
+}
+
+ol {
+	padding-inline-start: 1.6em;
+}
+
+ol > li {
+	padding-left: 0.2em;
+}
+
+.mono ol {
+	padding-inline-start: 2em;
+}
+
+.mono ol > li {
+	text-indent: -0.4em;
+}
+
+.toggle {
+	padding-inline-start: 0em;
+	list-style-type: none;
+}
+
+/* Indent toggle children */
+.toggle > li > details {
+	padding-left: 1.7em;
+}
+
+.toggle > li > details > summary {
+	margin-left: -1.1em;
+}
+
+.selected-value {
+	display: inline-block;
+	padding: 0 0.5em;
+	background: rgba(206, 205, 202, 0.5);
+	border-radius: 3px;
+	margin-right: 0.5em;
+	margin-top: 0.3em;
+	margin-bottom: 0.3em;
+	white-space: nowrap;
+}
+
+.collection-title {
+	display: inline-block;
+	margin-right: 1em;
+}
+
+.simple-table {
+	margin-top: 1em;
+	font-size: 0.875rem;
+	empty-cells: show;
+}
+.simple-table td {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table th {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table-header-color {
+	background: rgb(247, 246, 243);
+	color: black;
+}
+.simple-table-header {
+	font-weight: 500;
+}
+
+time {
+	opacity: 0.5;
+}
+
+.icon {
+	display: inline-block;
+	max-width: 1.2em;
+	max-height: 1.2em;
+	text-decoration: none;
+	vertical-align: text-bottom;
+	margin-right: 0.5em;
+}
+
+img.icon {
+	border-radius: 3px;
+}
+
+.user-icon {
+	width: 1.5em;
+	height: 1.5em;
+	border-radius: 100%;
+	margin-right: 0.5rem;
+}
+
+.user-icon-inner {
+	font-size: 0.8em;
+}
+
+.text-icon {
+	border: 1px solid #000;
+	text-align: center;
+}
+
+.page-cover-image {
+	display: block;
+	object-fit: cover;
+	width: 100%;
+	max-height: 30vh;
+}
+
+.page-header-icon {
+	font-size: 3rem;
+	margin-bottom: 1rem;
+}
+
+.page-header-icon-with-cover {
+	margin-top: -0.72em;
+	margin-left: 0.07em;
+}
+
+.page-header-icon img {
+	border-radius: 3px;
+}
+
+.link-to-page {
+	margin: 1em 0;
+	padding: 0;
+	border: none;
+	font-weight: 500;
+}
+
+p > .user {
+	opacity: 0.5;
+}
+
+td > .user,
+td > time {
+	white-space: nowrap;
+}
+
+input[type="checkbox"] {
+	transform: scale(1.5);
+	margin-right: 0.6em;
+	vertical-align: middle;
+}
+
+p {
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+}
+
+.image {
+	border: none;
+	margin: 1.5em 0;
+	padding: 0;
+	border-radius: 0;
+	text-align: center;
+}
+
+.code,
+code {
+	background: rgba(135, 131, 120, 0.15);
+	border-radius: 3px;
+	padding: 0.2em 0.4em;
+	border-radius: 3px;
+	font-size: 85%;
+	tab-size: 2;
+}
+
+code {
+	color: #eb5757;
+}
+
+.code {
+	padding: 1.5em 1em;
+}
+
+.code-wrap {
+	white-space: pre-wrap;
+	word-break: break-all;
+}
+
+.code > code {
+	background: none;
+	padding: 0;
+	font-size: 100%;
+	color: inherit;
+}
+
+blockquote {
+	font-size: 1.25em;
+	margin: 1em 0;
+	padding-left: 1em;
+	border-left: 3px solid rgb(55, 53, 47);
+}
+
+.bookmark {
+	text-decoration: none;
+	max-height: 8em;
+	padding: 0;
+	display: flex;
+	width: 100%;
+	align-items: stretch;
+}
+
+.bookmark-title {
+	font-size: 0.85em;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	height: 1.75em;
+	white-space: nowrap;
+}
+
+.bookmark-text {
+	display: flex;
+	flex-direction: column;
+}
+
+.bookmark-info {
+	flex: 4 1 180px;
+	padding: 12px 14px 14px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.bookmark-image {
+	width: 33%;
+	flex: 1 1 180px;
+	display: block;
+	position: relative;
+	object-fit: cover;
+	border-radius: 1px;
+}
+
+.bookmark-description {
+	color: rgba(55, 53, 47, 0.6);
+	font-size: 0.75em;
+	overflow: hidden;
+	max-height: 4.5em;
+	word-break: break-word;
+}
+
+.bookmark-href {
+	font-size: 0.75em;
+	margin-top: 0.25em;
+}
+
+.sans { font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol"; }
+.code { font-family: "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace; }
+.serif { font-family: Lyon-Text, Georgia, ui-serif, serif; }
+.mono { font-family: iawriter-mono, Nitti, Menlo, Courier, monospace; }
+.pdf .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK JP'; }
+.pdf:lang(zh-CN) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC'; }
+.pdf:lang(zh-TW) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK TC'; }
+.pdf:lang(ko-KR) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK KR'; }
+.pdf .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.pdf .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK JP'; }
+.pdf:lang(zh-CN) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK SC'; }
+.pdf:lang(zh-TW) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK TC'; }
+.pdf:lang(ko-KR) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK KR'; }
+.pdf .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.highlight-default {
+	color: rgba(55, 53, 47, 1);
+}
+.highlight-gray {
+	color: rgba(120, 119, 116, 1);
+	fill: rgba(120, 119, 116, 1);
+}
+.highlight-brown {
+	color: rgba(159, 107, 83, 1);
+	fill: rgba(159, 107, 83, 1);
+}
+.highlight-orange {
+	color: rgba(217, 115, 13, 1);
+	fill: rgba(217, 115, 13, 1);
+}
+.highlight-yellow {
+	color: rgba(203, 145, 47, 1);
+	fill: rgba(203, 145, 47, 1);
+}
+.highlight-teal {
+	color: rgba(68, 131, 97, 1);
+	fill: rgba(68, 131, 97, 1);
+}
+.highlight-blue {
+	color: rgba(51, 126, 169, 1);
+	fill: rgba(51, 126, 169, 1);
+}
+.highlight-purple {
+	color: rgba(144, 101, 176, 1);
+	fill: rgba(144, 101, 176, 1);
+}
+.highlight-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.highlight-red {
+	color: rgba(212, 76, 71, 1);
+	fill: rgba(212, 76, 71, 1);
+}
+.highlight-gray_background {
+	background: rgba(241, 241, 239, 1);
+}
+.highlight-brown_background {
+	background: rgba(244, 238, 238, 1);
+}
+.highlight-orange_background {
+	background: rgba(251, 236, 221, 1);
+}
+.highlight-yellow_background {
+	background: rgba(251, 243, 219, 1);
+}
+.highlight-teal_background {
+	background: rgba(237, 243, 236, 1);
+}
+.highlight-blue_background {
+	background: rgba(231, 243, 248, 1);
+}
+.highlight-purple_background {
+	background: rgba(244, 240, 247, 0.8);
+}
+.highlight-pink_background {
+	background: rgba(249, 238, 243, 0.8);
+}
+.highlight-red_background {
+	background: rgba(253, 235, 236, 1);
+}
+.block-color-default {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray {
+	color: rgba(120, 119, 116, 1);
+	fill: rgba(120, 119, 116, 1);
+}
+.block-color-brown {
+	color: rgba(159, 107, 83, 1);
+	fill: rgba(159, 107, 83, 1);
+}
+.block-color-orange {
+	color: rgba(217, 115, 13, 1);
+	fill: rgba(217, 115, 13, 1);
+}
+.block-color-yellow {
+	color: rgba(203, 145, 47, 1);
+	fill: rgba(203, 145, 47, 1);
+}
+.block-color-teal {
+	color: rgba(68, 131, 97, 1);
+	fill: rgba(68, 131, 97, 1);
+}
+.block-color-blue {
+	color: rgba(51, 126, 169, 1);
+	fill: rgba(51, 126, 169, 1);
+}
+.block-color-purple {
+	color: rgba(144, 101, 176, 1);
+	fill: rgba(144, 101, 176, 1);
+}
+.block-color-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.block-color-red {
+	color: rgba(212, 76, 71, 1);
+	fill: rgba(212, 76, 71, 1);
+}
+.block-color-gray_background {
+	background: rgba(241, 241, 239, 1);
+}
+.block-color-brown_background {
+	background: rgba(244, 238, 238, 1);
+}
+.block-color-orange_background {
+	background: rgba(251, 236, 221, 1);
+}
+.block-color-yellow_background {
+	background: rgba(251, 243, 219, 1);
+}
+.block-color-teal_background {
+	background: rgba(237, 243, 236, 1);
+}
+.block-color-blue_background {
+	background: rgba(231, 243, 248, 1);
+}
+.block-color-purple_background {
+	background: rgba(244, 240, 247, 0.8);
+}
+.block-color-pink_background {
+	background: rgba(249, 238, 243, 0.8);
+}
+.block-color-red_background {
+	background: rgba(253, 235, 236, 1);
+}
+.select-value-color-pink { background-color: rgba(245, 224, 233, 1); }
+.select-value-color-purple { background-color: rgba(232, 222, 238, 1); }
+.select-value-color-green { background-color: rgba(219, 237, 219, 1); }
+.select-value-color-gray { background-color: rgba(227, 226, 224, 1); }
+.select-value-color-opaquegray { background-color: rgba(255, 255, 255, 0.0375); }
+.select-value-color-orange { background-color: rgba(250, 222, 201, 1); }
+.select-value-color-brown { background-color: rgba(238, 224, 218, 1); }
+.select-value-color-red { background-color: rgba(255, 226, 221, 1); }
+.select-value-color-yellow { background-color: rgba(253, 236, 200, 1); }
+.select-value-color-blue { background-color: rgba(211, 229, 239, 1); }
+
+.checkbox {
+	display: inline-flex;
+	vertical-align: text-bottom;
+	width: 16;
+	height: 16;
+	background-size: 16px;
+	margin-left: 2px;
+	margin-right: 5px;
+}
+
+.checkbox-on {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20width%3D%2216%22%20height%3D%2216%22%20fill%3D%22%2358A9D7%22%2F%3E%0A%3Cpath%20d%3D%22M6.71429%2012.2852L14%204.9995L12.7143%203.71436L6.71429%209.71378L3.28571%206.2831L2%207.57092L6.71429%2012.2852Z%22%20fill%3D%22white%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+
+.checkbox-off {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20x%3D%220.75%22%20y%3D%220.75%22%20width%3D%2214.5%22%20height%3D%2214.5%22%20fill%3D%22white%22%20stroke%3D%22%2336352F%22%20stroke-width%3D%221.5%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+	
+</style></head><body><article id="8e69c4c3-957b-4924-af12-090a4e51c2cb" class="page sans"><header><div class="page-header-icon undefined"><span class="icon">📚</span></div><h1 class="page-title"><strong>Jenkins and Continuous Integration ( CI ) / Continuous Delivery ( CD )</strong></h1></header><div class="page-body"><p id="61b88a5d-0084-426f-b21f-cb2fd0291ce0" class="">
+</p><h2 id="4d458945-4ecc-4a97-97b5-92f7cea94be2" class="">☁️ Going Cloud Native</h2><h3 id="54555650-0597-425f-9599-e1acb06e6fd2" class="">Monolithic</h3><p id="5b45df50-c4a7-4eac-9418-4ff446c85688" class="">All functionalities are package in a single artifact and deployd in a single server running one process. </p><p id="e46ba39b-0cec-4f70-94aa-c1a32ee1397b" class="">
+</p><p id="ed347a91-1318-4dad-8dd2-2586c7799236" class="">Drawbacks and limitations</p><ul id="50f42ef5-82db-424d-94b8-a22f321eafd5" class="bulleted-list"><li style="list-style-type:disc"><strong>Development velocity: </strong>Adding new features is often slow, expensive and requires extra sync when working with multiple develoepers whithin distributed teams on a large code base</li></ul><ul id="63a03f3d-c703-4faf-a960-057f33b07a59" class="bulleted-list"><li style="list-style-type:disc"><strong>Maintainability:</strong> Modules in a monolithic architecture are frequently tightly coupled, which makes them hard to maintain and test</li></ul><ul id="87cf8be1-3a50-4f65-a904-505e4f974fac" class="bulleted-list"><li style="list-style-type:disc"><strong>Scaling and resiliency:</strong> Applications are designed with no scalability in mind, and the application may face downtime if traffic increases</li></ul><ul id="34245f54-3baf-4d15-97ca-4d45181f9fe2" class="bulleted-list"><li style="list-style-type:disc"><strong>Cost-effectiveness:</strong> The appliction is expansive to maintain in the long run</li></ul><h3 id="045e96c5-57b2-4e3f-a57a-b48c6001e3fb" class="">Microservices</h3><p id="fb7289ad-4053-4a43-9cb3-aed6cf8ab075" class="">The microservice architectural style is an approach to developing a single application as a suite of small services, each running in its own process and communicating with lightweight mechanisms, often an HTTP resource API. There is a bare minimum of centralized management of these services, which may be written in different programming languages and use different data storage technologies</p><figure id="014e2ca6-69cc-4070-b7aa-1673c351590c" class="image"><a href="Jenkins%20and%20Continuous%20Integration%20(%20CI%20)%20Continuo%208e69c4c3957b4924af12090a4e51c2cb/Untitled.png"><img style="width:742px" src="Jenkins%20and%20Continuous%20Integration%20(%20CI%20)%20Continuo%208e69c4c3957b4924af12090a4e51c2cb/Untitled.png"/></a></figure><p id="59ea46cd-35e0-4d96-9b69-bfe9650267b8" class="">
+</p><p id="de789edf-4b69-4a2d-9f67-a02dec60ea49" class="">Benefits:</p><ul id="35964395-4ec2-47a6-95bd-0942b2beae3a" class="bulleted-list"><li style="list-style-type:disc"><strong>Scalability:</strong> Applications built as microservices can be broken into multiple components </li></ul><ul id="acc35c26-7f1e-4a20-8711-45ea78e9d630" class="bulleted-list"><li style="list-style-type:disc"><strong>Fault Tolerance: </strong>If one microservice fails, the others will continue to work be cause of loosely coupled components</li></ul><ul id="7d38598a-90e9-4fe9-870b-57d0b58f37c0" class="bulleted-list"><li style="list-style-type:disc"><strong>Development velocity: </strong>Microservices can ben written in different languages</li></ul><ul id="d408c38d-a864-4116-bdb1-c8f867f04db0" class="bulleted-list"><li style="list-style-type:disc"><strong>Continuos everything: </strong>Microservices architecture combined with Agile software development enable continuos delivery. The software release cycle in microservice application becomes much smaller, and many features can be released per day through CI/CD pipelines with open source CI tools like Jenkins</li></ul><p id="9b7b1d3d-2ff2-4683-84b6-48695bad4efa" class="">
+</p><p id="940ace84-23b9-4d52-85b1-9d58c4af4a9b" class="">Point to consider:</p><ul id="68bba25d-d5d9-4078-bdc4-cabaa84a4d2a" class="bulleted-list"><li style="list-style-type:disc">Complexity</li></ul><ul id="f166dc63-d5d9-4265-acb1-de7bcca94bd1" class="bulleted-list"><li style="list-style-type:disc">Operation overhead</li></ul><ul id="d280fcd2-1b9e-4f79-a21c-f3b9f4c7dcf6" class="bulleted-list"><li style="list-style-type:disc">Synchronization</li></ul><p id="6759ebc5-63e2-45a7-ae78-eb30690c3250" class="">
+</p><h3 id="30f056e1-b0fb-40b3-8cf6-d77dc8a29442" class="">Cloud Native</h3><p id="53552f5d-eb9f-4571-9467-79bc1d4ccae6" class="">Cloud-native technologies allow organizations to build and run scalable applications in modern, dynamic environments such as public, private, and hybrid clouds. Containers, service meshes, microservices, immutable infrastructure, and declarative APIs exemplify this approach. These techniques enable loosely coupled systems that are resilient, manageable, and observable. Combined with robust automation, they allow engineers to make high-impact changes frequently and predictably with minimal toil.</p><p id="e5522cf8-c261-4f72-9f1a-a1a479d748ba" class="">
+</p><figure id="145588e6-2e98-4b60-b958-593d026d90c6" class="image"><a href="Jenkins%20and%20Continuous%20Integration%20(%20CI%20)%20Continuo%208e69c4c3957b4924af12090a4e51c2cb/Untitled%201.png"><img style="width:857px" src="Jenkins%20and%20Continuous%20Integration%20(%20CI%20)%20Continuo%208e69c4c3957b4924af12090a4e51c2cb/Untitled%201.png"/></a></figure><p id="d0a81c62-27b3-4f0e-b008-48d0a947209d" class="">
+</p><h2 id="fd8e0752-be6d-42de-bc0b-4404bd8554cf" class="">Continuos Integration (CI)</h2><p id="db21ac76-b141-49a8-9be4-ece715130d65" class="">This a software development practice in which members of a team integrate their work frequently, at least daily, leading multiple integrations per dey</p><figure id="dc2ed498-3b6a-4080-8fec-5ee1af78833e" class="image"><a href="Jenkins%20and%20Continuous%20Integration%20(%20CI%20)%20Continuo%208e69c4c3957b4924af12090a4e51c2cb/ci.png"><img style="width:477px" src="Jenkins%20and%20Continuous%20Integration%20(%20CI%20)%20Continuo%208e69c4c3957b4924af12090a4e51c2cb/ci.png"/></a></figure><figure id="651a4f91-20bc-4b51-a816-aebde8d64895" class="image"><a href="Jenkins%20and%20Continuous%20Integration%20(%20CI%20)%20Continuo%208e69c4c3957b4924af12090a4e51c2cb/CI2.png"><img style="width:1589px" src="Jenkins%20and%20Continuous%20Integration%20(%20CI%20)%20Continuo%208e69c4c3957b4924af12090a4e51c2cb/CI2.png"/></a></figure><p id="1a3b38f4-b86d-4286-98a1-722305b36407" class="">
+</p><p id="c6d06f7d-95d8-48eb-9f2a-d0e3d81c31fc" class="">A classic CI pipeline is as follows:</p><ol type="1" id="f31dbe1f-25c4-4348-b8cb-1f5dfbbb8913" class="numbered-list" start="1"><li>Triggers a build whenever a code commit occurs</li></ol><ol type="1" id="5e29b599-3143-483a-bab4-8b7f54d52b8b" class="numbered-list" start="2"><li>Runs the unit test and all pre-integration tests</li></ol><ol type="1" id="f3dbd1ed-9e5b-45f9-a375-8983b286bbc2" class="numbered-list" start="3"><li>Build the artifact (Docker image, zip file, machine learning training model)</li></ol><ol type="1" id="2392f714-26d1-497d-b366-c947d4bbcf01" class="numbered-list" start="4"><li>Runs acceptance test and pushes the result to an artifact management repository (Docker Registry, JFrog, etc)</li></ol><figure id="72aeb184-8886-49b5-b184-8480482aae0c" class="image"><a href="Jenkins%20and%20Continuous%20Integration%20(%20CI%20)%20Continuo%208e69c4c3957b4924af12090a4e51c2cb/Untitled%202.png"><img style="width:710px" src="Jenkins%20and%20Continuous%20Integration%20(%20CI%20)%20Continuo%208e69c4c3957b4924af12090a4e51c2cb/Untitled%202.png"/></a></figure><p id="05d06f63-37d5-4f46-b675-61a04bb81c82" class="">
+</p><p id="9995d13e-f359-4e3b-8297-f1c0881fadea" class="">You can implement various types of testing to ensure that your software meets all the initial requirements:</p><p id="c226f10c-c068-47b1-9aa0-ef2afb0c9214" class="">
+</p><ul id="67e1c17d-855a-47c9-a0b9-a5842266d7df" class="bulleted-list"><li style="list-style-type:disc"><strong>Unit tests:</strong> These test each piece of the source code. They consist of testing individual functions and methods</li></ul><ul id="1f4c6da8-3bbe-409d-b121-4199342b083d" class="bulleted-list"><li style="list-style-type:disc"><strong>Quality tests: </strong>Check that the code is well formatted, follows best practices, and has no serious coding errors.</li></ul><ul id="ddc33e82-930a-424f-87ee-0f982bc5680c" class="bulleted-list"><li style="list-style-type:disc"><strong>Security tests: </strong>Inspect source code to uncover common security vulnerabilities and common security flaws</li></ul><ul id="f5d88e2b-6260-4e75-854b-23a05c7aace3" class="bulleted-list"><li style="list-style-type:disc"><strong>Integration tests: </strong>Check that services or components used by the application work well together and no defects exist</li></ul><h1 id="8466fd90-a624-4c53-a047-7a1a07bf9bbb" class="">Continuos Delivery (CD)</h1><p id="c8cb03ae-4dba-4e49-b90e-183ef29c445c" class="">This a software development discipline where software is built in a manner that allows for deploying to customers at any time, but requires human intervention or a business decision before deploying the release to production</p><p id="82e2938e-051c-42c0-93a5-0532e52c932d" class="">
+</p><figure id="0a7761ac-11d1-49db-af45-cb821f7de95b" class="image"><a href="Jenkins%20and%20Continuous%20Integration%20(%20CI%20)%20Continuo%208e69c4c3957b4924af12090a4e51c2cb/CD.png"><img style="width:1589px" src="Jenkins%20and%20Continuous%20Integration%20(%20CI%20)%20Continuo%208e69c4c3957b4924af12090a4e51c2cb/CD.png"/></a></figure><p id="2b97f981-c81a-40d2-a016-4237aa0782fc" class=""> </p><figure id="55830f03-c40c-454a-88e8-f7c7eb81ed6f" class="image"><a href="Jenkins%20and%20Continuous%20Integration%20(%20CI%20)%20Continuo%208e69c4c3957b4924af12090a4e51c2cb/Untitled%203.png"><img style="width:699px" src="Jenkins%20and%20Continuous%20Integration%20(%20CI%20)%20Continuo%208e69c4c3957b4924af12090a4e51c2cb/Untitled%203.png"/></a></figure><h1 id="7635a46a-4f06-4666-9db6-93b7c30c5c7d" class="">Continuos Deployment (CD)</h1><p id="93386b74-d48b-46a6-8580-03351dfec5e8" class="">This extends Continuos Delivery by automating the deployment process so that code is automatically deployed to production after it passes automated testing</p><p id="d83c6a03-b375-453e-8fd7-53c578d46de9" class="">
+</p><figure id="7d4d430c-df8c-44dc-b2f1-cb7f27d59c81" class="image"><a href="Jenkins%20and%20Continuous%20Integration%20(%20CI%20)%20Continuo%208e69c4c3957b4924af12090a4e51c2cb/cd2.png"><img style="width:954px" src="Jenkins%20and%20Continuous%20Integration%20(%20CI%20)%20Continuo%208e69c4c3957b4924af12090a4e51c2cb/cd2.png"/></a></figure><p id="cd8f057b-7dd4-4a89-97bb-0a5efb857e09" class="">
+</p><figure id="b5fd2807-22ea-45f3-b59a-8c95dc9c7b40" class="image"><a href="Jenkins%20and%20Continuous%20Integration%20(%20CI%20)%20Continuo%208e69c4c3957b4924af12090a4e51c2cb/Untitled%204.png"><img style="width:710px" src="Jenkins%20and%20Continuous%20Integration%20(%20CI%20)%20Continuo%208e69c4c3957b4924af12090a4e51c2cb/Untitled%204.png"/></a></figure><p id="31fde2e1-9339-4218-a921-b33f272cb9f6" class="">
+</p><p id="84bb84d8-9d70-4334-b867-90f4c1d0e28e" class="">The most popular CI/CD tools on the market today</p><figure id="1b73d2eb-9060-414e-9073-60dc54a1589d" class="image"><a href="Jenkins%20and%20Continuous%20Integration%20(%20CI%20)%20Continuo%208e69c4c3957b4924af12090a4e51c2cb/Untitled%205.png"><img style="width:587px" src="Jenkins%20and%20Continuous%20Integration%20(%20CI%20)%20Continuo%208e69c4c3957b4924af12090a4e51c2cb/Untitled%205.png"/></a></figure><p id="1a8d0e79-a871-4699-bcc9-30e8ac9f8d53" class="">
+</p><h2 id="98efe2b3-a9fc-43d6-8eef-411060caafee" class="">💼 Jobs in Jenkins</h2><p id="a1360573-3013-4036-850d-4c7f8042b121" class="">
+</p><p id="6daa20ba-4bc3-46d8-88fe-373416851a11" class="">A <strong>Job</strong> is any runnable task that is controlled by jenkins</p><p id="8982237a-d57d-4587-ac06-23752f9e17a0" class="">The Jenkins official documentation indicates that the term <strong>Job </strong>has been replaced by term <strong>Project</strong></p><p id="be4b3d2e-9c29-4801-885b-02499821fe06" class="">Remeber: Job = Project</p><p id="356aa2d4-c983-43e0-9bf6-03814f9f49e8" class="">
+</p><h3 id="84c95e0d-f9dd-4e82-b419-fbb0c098a7be" class="">1️⃣  Freestyle Project</h3><p id="5a102135-29e3-4945-be0c-c2160a2705c4" class="">This is the most common type of project. The build step for this type of project normally executes a shell (Linux) or batch (Windows) command</p><p id="14d6c823-2ee5-43e9-a51f-e7536aefa6fc" class="">
+</p><h3 id="f78609af-422e-4d7d-b882-7e5cd99c9460" class=""> 2️⃣  Pipeline</h3><p id="94e3b601-188f-4940-af24-51532cc1cf92" class="">This type of project used to be called a <strong><strong><strong><strong><strong><strong><strong><strong>workfow.</strong></strong></strong></strong></strong></strong></strong></strong> These project are normally written in Jenkins Domain Specific Language (DSL).</p><p id="4d8a00c1-a26b-40b0-bcee-8ec1cc3e5a7d" class="">These types of projects are for things that do no fit in a freestyle project, because they are too complicated or span multiple nodes.</p><p id="5dbb73ea-bdf0-4fa9-8637-2527ed5a1d2e" class="">
+</p><h3 id="8e1f8be9-13d5-4eff-9f2c-f722e6f66b36" class=""> 3️⃣  Multi-Configuration Project</h3><p id="2b862544-75b7-4fe2-a6ff-cc0b8beddf51" class="">This is for projects that will be tested on multiple environments, and require different configurations, dependeing on those environments.</p><p id="eb9c8890-d640-4079-b559-ce20375a4c9b" class="">
+</p><h3 id="f41ad0f0-f74a-4f61-a713-0b435702225a" class=""> 4️⃣  GitHub Organization</h3><p id="516e8f38-897d-4a20-a8b7-0b00d8c50e6c" class="">This type of project can use the source control plataform’s organization and allow Jenkins to act on Jenkinsfiles stored within the organizatio’s repositories</p><p id="55de4962-f5d4-4aa4-bd34-11ffa8332d79" class="">
+</p><h3 id="6ae0c4a8-b6a6-44ba-adf3-7a775b5a1729" class="">5️⃣  Folder</h3><p id="9e670a39-eebf-4a8f-8285-b1cd57a8e963" class="">This provides a method to group projects together. This is no technically a project. It acts as a type of directory structure for the projects, and the folder name becomes part of the path of the projects.</p><p id="33e2980e-dcfb-402d-8421-bd4f3419416f" class="">
+</p><h3 id="a14342f9-16fc-4cf2-8532-449b943f4295" class="">6️⃣  Multi-Branch Pipeline</h3><p id="3e35be84-46e2-4adb-ad38-e653fb5053c4" class="">In this type of project, Jenkins uses a Jenkisfile to mark repositories. If a branch is created in that repository, Jenkins will make a new project in Jenkis for that branch</p><p id="39695fb1-4a4e-452c-8c72-1a6ad73841f1" class="">
+</p><h3 id="938ce22f-cbda-40ae-9f06-cecea8ae9fe8" class="">👉🏻 Job / Project Scope</h3><p id="57d1aca4-7f90-43d8-847a-1b93f51cca14" class="">This includes all of the items that are part of that particular Job / Project. In some cases, there are Global libraries that are brought into the scope of a project simply by being included. Other items that are declared within a project only exist in that project’s scope, and are not available as a shared resource</p><p id="a4fcdd26-a90f-42e6-9ab4-6e723a506029" class="">
+</p><h2 id="d90861a6-e926-47eb-9ea1-92137c641366" class="">🛠️ What is a Build?</h2><p id="0f11d80e-0a0b-4116-9735-4ba9debaaac8" class="">
+</p><p id="7f98358d-074c-4b59-93ac-ee5900c9e562" class="">A Build is the result of a single execution of a project</p><figure id="2f06ca29-0b6d-4f38-94e7-9915d369dac9" class="image"><a href="Jenkins%20and%20Continuous%20Integration%20(%20CI%20)%20Continuo%208e69c4c3957b4924af12090a4e51c2cb/Build.png"><img style="width:713px" src="Jenkins%20and%20Continuous%20Integration%20(%20CI%20)%20Continuo%208e69c4c3957b4924af12090a4e51c2cb/Build.png"/></a></figure><h3 id="8fadabc0-9aa5-497d-83dc-92724eccf7ad" class="">Build Steps </h3><p id="dedba5b8-5248-4f14-a2a8-2c60c669b567" class="">A single task within a project</p><p id="3d98708e-e81e-4810-8978-78b9e86aa29e" class="">
+</p><h3 id="a9a9d029-3b46-4aaa-8a85-5efaab307203" class="">Build Triggers</h3><p id="e254529d-dc9f-4766-8414-5bdaba0d8326" class="">A criteria for starting a new pipeline run or build</p><p id="bdb7090e-79dd-48f7-bc57-9417a1d2f7cd" class="">
+</p><h3 id="8a629604-f0ea-422f-80a6-8d60a2a09f34" class="">Artifacts and Repositories</h3><ul id="b0e9fa64-88e2-4e86-bbde-5a6f9d24e7b6" class="block-color-gray_background bulleted-list"><li style="list-style-type:disc">This refers to immutable files that are generated during a build or a pipeline run. These are archived on the Jenkins master for later retrieval.</li></ul><ul id="59e2abf8-efdf-4d45-ad49-8a6f810679b7" class="block-color-gray_background bulleted-list"><li style="list-style-type:disc">A single build can have multiple artifacts associated with it. These can include jar files, war files, configuration files, and other generated assets.</li></ul><ul id="2aec3b9e-3e2a-4c30-8965-d241e6b16eb4" class="block-color-gray_background bulleted-list"><li style="list-style-type:disc">Artifacts are maintained in a repository. This can be on the Jenkins master or in a Source Control Manager (SCM)</li></ul><ul id="d5fe2741-0aad-4329-b368-ca139174624d" class="block-color-gray_background bulleted-list"><li style="list-style-type:disc">Repositories hold items that need to be retrieved. These items can include source code, compiled code, compiled code artifats and configuration files.</li></ul><p id="1d44a3d8-580a-48c8-8d77-d125b4229c11" class="">
+</p><h3 id="abf7ca0b-1ac2-46e6-a217-0c91b54f6888" class="">🔧 Build Tools</h3><ul id="082ced18-810f-43fa-ab97-970107db4005" class="bulleted-list"><li style="list-style-type:disc">This are the software that actually performs the build portion of the pipeline.</li></ul><ul id="4c809733-54d5-40ca-b87d-be76fd0fc462" class="bulleted-list"><li style="list-style-type:disc">Build tools can include Maven, Ant and shell scripting</li></ul><ul id="3c0cd19e-ec21-4110-8e3f-409ddc00b2be" class="bulleted-list"><li style="list-style-type:disc">Configuration varies by build tool, but the processes are similar</li></ul><p id="22c7681d-5f95-41df-a2c9-697235a0ad28" class="">
+</p><div id="06f741dc-040b-46bf-afdf-8bdf9a991e4b" class="column-list"><div id="f4ed2a0d-79d4-46c1-bc55-ded63ddd81fd" style="width:93.75%" class="column"><ol type="1" id="607689a5-cf5c-4961-af34-94f83e74f3fd" class="numbered-list" start="1"><li>Start Jenkins and install required plugins</li></ol><ol type="1" id="5a81967c-176d-4792-91a2-a28e8dfa6dda" class="numbered-list" start="2"><li>Perform global configuration steps</li></ol><p id="6e739225-5bb1-4f86-94b4-ee9f6e1414d5" class="">
+</p></div><div id="a7e1f3e6-4005-4ee9-ba80-daa810fa12ad" style="width:100%" class="column"><ol type="1" id="a6b8c0da-8cf4-4449-b794-5d3c91f91df8" class="numbered-list" start="3"><li>Create a Job / Pipeline that utilizes the build tool</li></ol><ol type="1" id="c21f0138-f285-4b0a-8bc8-a0881b80e03f" class="numbered-list" start="4"><li>Update the tools configuration files: POM, XML, .config, etc</li></ol><p id="9e5c085e-e1e3-4d90-887b-5b46ba6366b0" class="">
+</p><p id="125c6b3f-ff31-42d6-890c-00f81b938f67" class="">
+</p></div></div><h2 id="99a20f38-7910-43b5-9285-6a6f39465c93" class="">Source Code Manager (SCM)</h2><ul id="695775fa-4291-43bf-8908-d54d9441d6f1" class="bulleted-list"><li style="list-style-type:disc">A SCM is software that is used to track changes in code.</li></ul><ul id="7cf4fd2b-c1a3-4e3c-85a3-95d82f16ade5" class="bulleted-list"><li style="list-style-type:disc">Changes in code, revisions, are timestamped and include the identity of the person that made the change</li></ul><ul id="0cf9155a-23b4-4a89-b4fb-8c90cc14ee36" class="bulleted-list"><li style="list-style-type:disc">Changes can be tracked or rolled back as needed. Versions of the code can be compared, stored and merge with other version</li></ul><ul id="eb4acd25-b30f-4d9b-8dd4-1c9b8678b370" class="bulleted-list"><li style="list-style-type:disc">Some examples are Git, Subversion, Mercurial, and Perforce</li></ul><ul id="66a6a560-c824-48f2-ab9d-3810d3a7a3a0" class="bulleted-list"><li style="list-style-type:disc">Cloud based SCM such as Github or Gitlab can be leveraged as offsite repositories for code</li></ul><ul id="963ad57a-0295-4d1c-8a24-b2f4e4959dbf" class="bulleted-list"><li style="list-style-type:disc">Jenkins changelogs are used for tracking changes in builds</li></ul><p id="56689c00-6772-4571-a193-608146ba4d0f" class="">
+</p><h2 id="4cca5aa6-13e1-4687-98c3-d382d09282fe" class="">Distribuid Builds</h2><p id="e5ee0d12-0de8-45ed-a339-e4b8bcae358d" class="">Distributed builds are build jobs in which the executor of the build is located on an agent (node) that is separate from the master</p><figure id="7b8b02c2-87a4-480a-b4f7-5b6864997832" class="image"><a href="Jenkins%20and%20Continuous%20Integration%20(%20CI%20)%20Continuo%208e69c4c3957b4924af12090a4e51c2cb/DistributedBuilds.png"><img style="width:381px" src="Jenkins%20and%20Continuous%20Integration%20(%20CI%20)%20Continuo%208e69c4c3957b4924af12090a4e51c2cb/DistributedBuilds.png"/></a></figure><p id="729b3c45-6ea5-4f3e-8ba6-017e6ea2b76c" class="">
+</p><ul id="760771a7-3842-4bd6-953d-0685d1fe36c8" class="bulleted-list"><li style="list-style-type:disc">The master acts as the controller for the build, running specific builds on specific agents, allowing for parallelism and greater ease in multiconfiguration pipelines</li></ul><ul id="7874ebfd-f2b9-42bb-9a45-5670f00376ee" class="bulleted-list"><li style="list-style-type:disc">Nodes with specific configurations can be tagged so that pipeline steps specific to that configuration are directed to that node</li></ul><ul id="8f9de6ec-635e-454d-b883-4f84cb33580d" class="bulleted-list"><li style="list-style-type:disc">In most cases Artifacts, progress report and build results are sent back to the master repository. Storage on the master must be considered for this reason</li></ul><ul id="2870c56c-ed93-4209-8b20-686b35284e0d" class="bulleted-list"><li style="list-style-type:disc">Master / Agent communication is via SSH (preferred) or JNLP (TCP or HTTP)</li></ul><ul id="aa7d1d65-29f4-41d3-addf-acbf2761310d" class="bulleted-list"><li style="list-style-type:disc">Agents should be “fungible” (replaceable). This means that local configuration on the agent should be kept to a minimum global configuration on the master should be preferred</li></ul><p id="0d3f05b1-35ad-44e2-a785-970fd0feca67" class="">
+</p><h2 id="60e03f5f-f00e-4c27-b982-d3db611fdead" class="">🔌 Plugins</h2><p id="fdfeacb2-4016-43a6-8111-c05dad77c371" class="">Plugins are extensions to Jenkins that add to its functionality</p><p id="06093532-477e-459d-a531-d38c7b1d3300" class="">Jenkins defines interfaces / abstract classes that model a part of the build system. These define what needs to be implemented, and Jenkins plugins extend that implementation.</p><p id="82aa835c-b725-4797-86b5-3c6964f0f40e" class="">During installation you have the choice to install recommended plugins or to select plugins</p><p id="1b25d654-f2d8-41c9-b080-2d14025d7147" class="">The recommended plugins are:</p><div id="4d0710d6-68d8-47b6-b067-152e6911051e" class="column-list"><div id="d9369a5e-389d-4954-b455-1a8a1d91c0a4" style="width:100%" class="column"><ul id="5d392d81-0859-4513-9c21-566d3c7f7e86" class="bulleted-list"><li style="list-style-type:disc">Ant plugin</li></ul><ul id="ec6d4391-80c1-4283-8096-c879e7ddf164" class="bulleted-list"><li style="list-style-type:disc">Credentials Binbing plugin</li></ul><ul id="918059b4-cd4a-4376-a4ea-ac799880e6c5" class="bulleted-list"><li style="list-style-type:disc">LDAP plugin</li></ul><ul id="8dbacecf-769f-4ec5-9e5b-1c562b423363" class="bulleted-list"><li style="list-style-type:disc">Pipeline</li></ul><ul id="bc218c10-f0c4-4659-b322-e5e4799eeff0" class="bulleted-list"><li style="list-style-type:disc">Email Extension plugin</li></ul><ul id="6a67ee68-d5a3-4c71-aba0-3083ca5d0fae" class="bulleted-list"><li style="list-style-type:disc">Mailer plugin</li></ul><ul id="db4ceb57-a889-4ef7-9fe3-3b0825d573f2" class="bulleted-list"><li style="list-style-type:disc">SSH Slaves plugin</li></ul></div><div id="7638de42-6f96-493f-aeb6-b14f7265cce5" style="width:100%" class="column"><ul id="2d76b790-3ad2-4089-93da-d6e988a67ec4" class="bulleted-list"><li style="list-style-type:disc">GitHub Organization Folder plugin</li></ul><ul id="83f99b10-caa2-40d6-a229-d25fbe84ba68" class="bulleted-list"><li style="list-style-type:disc">Git plugin</li></ul><ul id="867c5f72-e4ff-4b5f-b4fb-f9c1db92f7d0" class="bulleted-list"><li style="list-style-type:disc">Subversion plugin</li></ul><ul id="51b6d291-99f9-4a10-be20-e50ecde77c3e" class="bulleted-list"><li style="list-style-type:disc">Workspace Cleanup plugin</li></ul><ul id="ac545711-b0b7-4e30-ae5f-1192b713a7ad" class="bulleted-list"><li style="list-style-type:disc">CloudBees Folders plugin</li></ul><ul id="ca0f1158-7b50-4729-b63e-b412849bdc3f" class="bulleted-list"><li style="list-style-type:disc">Gradle plugin</li></ul><ul id="40ae2173-5362-41c1-b3e7-5610d554d7e6" class="bulleted-list"><li style="list-style-type:disc">Timestamper</li></ul></div></div><p id="f88b780e-3ccf-4571-b11b-65e08b70598f" class="">
+</p><p id="0c2fd096-2b58-4ad4-a058-5723b0e3d3b5" class="">Plugin Manager is like the app store</p><p id="e9a745fc-9518-4b2a-96f6-d8d1631b52c7" class="">Located under </p><p id="4722560a-49d7-4309-8f9d-162a7cecd973" class="">Manage Jenkins → Manage Plugins</p><p id="c703dc3d-c7b9-407d-bc57-974058ca6164" class="">Allows you to add, remove, disable or enable plugins</p><p id="531455b3-3d6c-44ae-9952-3738cfdf6f79" class="">The plugin manager can also provide important information about a plugin including version conflicts and issue that may arise from an update or installation</p><p id="0a014cda-5db4-4b20-9ce9-33c8f71cbc30" class="">
+</p><p id="e13e1301-c89a-42b1-acc6-51b2fd0352f2" class="">A must-have plugin is Pipeline Stage View. It allows you to have a visualization of your pipeline stages. This plugin is handy when you have complex build pipelines and want to track the progress of each stage.</p><p id="48af9e62-1de8-442b-85b7-6ead4d298397" class="">The pipeline output is organized as a matrix, with each row representing a run of the job, and each column mapped to a defined stage in the pipeline</p><figure id="4dad7a83-f8ab-4259-826d-69d03f421022" class="image"><a href="Jenkins%20and%20Continuous%20Integration%20(%20CI%20)%20Continuo%208e69c4c3957b4924af12090a4e51c2cb/Untitled%206.png"><img style="width:1100px" src="Jenkins%20and%20Continuous%20Integration%20(%20CI%20)%20Continuo%208e69c4c3957b4924af12090a4e51c2cb/Untitled%206.png"/></a></figure><p id="f7a34ee5-5a45-42df-8ae4-c0b0a920c6fd" class="">You can take this UI further and install the Blue Ocean plugin. This plugin requires Jenkins version 2.7 or later</p><figure id="1e5005cc-2283-4a41-81d8-19abd8c52437" class="image"><a href="Jenkins%20and%20Continuous%20Integration%20(%20CI%20)%20Continuo%208e69c4c3957b4924af12090a4e51c2cb/Untitled%207.png"><img style="width:880px" src="Jenkins%20and%20Continuous%20Integration%20(%20CI%20)%20Continuo%208e69c4c3957b4924af12090a4e51c2cb/Untitled%207.png"/></a></figure><p id="3106d5b8-7e74-46f8-b914-550cfc08c02b" class="">Blue Ocean is a new user experience for Jenkins, based on a modern design that allows users to graphically create, personalize, visualize, and diagnose CD pipelines. It comes bundled with the Jenkins Pipeline plugin or as a separate plugin. </p><p id="c12ebb72-1fad-48a3-9125-1cb91cd76977" class="">Blue Ocean has seamless integration with Git and GitHub</p><p id="96ebdb0a-f050-4dbe-affe-74f0cd639b96" class="">It’s a great way to write pipeline prototypes and debug pipeline stages before generating a working Jenkinsfile.</p><p id="30085bc4-db3f-4ffd-bae4-457a2bcf14ba" class="">Any pipeline created with the visual editor can also be edited in your favorite text editor, bringing all the benefits of PaC</p><figure id="1a6d00ce-3163-40f3-898d-6eb4708a2508" class="image"><a href="Jenkins%20and%20Continuous%20Integration%20(%20CI%20)%20Continuo%208e69c4c3957b4924af12090a4e51c2cb/Untitled%208.png"><img style="width:880px" src="Jenkins%20and%20Continuous%20Integration%20(%20CI%20)%20Continuo%208e69c4c3957b4924af12090a4e51c2cb/Untitled%208.png"/></a></figure><p id="9e27c0ad-08c2-49cd-833e-43b0934d7cc4" class="">
+</p><p id="4090df7d-3ed0-41ee-b70f-0ff0c077089a" class="">You can now copy the content and paste it in a new file called Jenkinsfile in your code repository, alongside the source code. Alternatively, you can upload the file directly from the Blue Ocean editor by supplying an appropriate description and the target Git branch</p><p id="c219068e-769e-4a5e-8d55-8b5d4792fa68" class="">Keep in mind that Blue Ocean doesn’t support all features of Jenkins such as administration, nodes management, or credential settings.</p><p id="65e038d5-4203-429c-8309-ddd8e84a583c" class="">
+</p><p id="ecff6c77-8a34-4da2-af6c-94612a55fdd8" class="">Note: The Blue Ocean plugin is available by appending /blue to the end of the Jenkins server URL.</p><h2 id="6bdb2399-9e30-4bcc-837e-203240d34374" class="">📌 Jenkins API</h2><p id="9f1980fa-f547-4e58-a29b-b2bb255ab7ba" class="">Jenkins provides a machine consumable REST style API for programmatically interacting with the Jenkins server</p><p id="b98e07fd-5719-4040-8773-64262b7fe131" class="">Documentation on this is located is located on the Jenkins server itself at http://serveraddres:port/api</p><p id="f818431a-440f-4ea7-abe0-c8d3d2a42428" class="">Jenkins exposes a REST API interaction by sedin REST methods to the Jenkins URL</p><p id="6869ec2f-d02f-4e36-8651-487a5811e4ef" class="">This will build the job that is named:</p><pre id="1637db7f-5252-40c5-952e-f454d255c6aa" class="code"><code>curl jenkinsurl:8080/jobs/jobname/buildernumber . -user username:password</code></pre><p id="a5677776-293b-4609-9f49-8884219de37d" class="">
+</p><p id="e8d2f912-4099-4ac1-8fc3-4cd79fb12f61" class="">This is an example of sending json values for a parameterized build:</p><pre id="50a4008e-e5f9-4d5b-999e-530623d1fed4" class="code"><code>curl jenkinsurl:8080/jobs/jobname/buildernumber . -user username:password /
+-data-urlencode json = &#x27;{&quot;parameter&quot;: [{&quot;name&quot;: &quot;id&quot;}, {&quot;somevalue&quot;:&quot;abcd&quot;}]&#x27;</code></pre><h3 id="807ab57c-d920-4cac-8aea-3229ba64e699" class="">Why use the API?</h3><ul id="61e184b1-0f2e-4525-8b46-42ae4e6b31aa" class="bulleted-list"><li style="list-style-type:disc">The API can be used to create jobs in a programatic way. Once the job is defined as code it can be checked into source, and versioned and managed</li></ul><ul id="3f30ec51-3f3b-4fcf-bede-fc936af898ee" class="bulleted-list"><li style="list-style-type:disc">Jobs can be copied, and so once a pipeline has been standardized it can be reproduced without manual configuration</li></ul><ul id="c1985937-020c-4021-9a0d-f99f0969aabf" class="bulleted-list"><li style="list-style-type:disc">The API can be leveraged to facilitate reporting on status of the build queue, and the load on the Jenkins servers, to determine if there are issues</li></ul><ul id="dd4ed473-fc67-43fb-b28a-da438d6cee2d" class="bulleted-list"><li style="list-style-type:disc">It provides administrators with a method to restart Jekins without requiring them to have SSH access to the underlying infrastructure on which Jenkins is running</li></ul><p id="93c8cc57-a617-45cd-8e4d-38b939174dc1" class="">
+</p><h2 id="ed513b38-9d3e-406b-8ee5-241ce2923267" class="">🔐 Security</h2><p id="45c05cd9-3a55-44cb-9586-4199e8c6af99" class="">
+</p><p id="5a4e8532-c465-4d35-bda2-3e8ac0585777" class="">Authentication vs Authorization</p><ul id="6ddf91b8-81c7-4d64-a77a-7575f2b80d36" class="bulleted-list"><li style="list-style-type:disc">Authentication is the process of verifying who you are</li></ul><ul id="18a19097-824d-410d-a916-80b3cb20b69e" class="bulleted-list"><li style="list-style-type:disc">Authorization is the process of determing what you are allowed to do</li></ul><p id="03eb25c7-8651-4127-8c59-1909fa45823f" class="">
+</p><h3 id="7b8cf9e3-a4e6-4173-8c00-8077a0eb38ea" class=""><strong>Jenkins Security Matrix</strong></h3><p id="59888da8-6845-4a97-ad27-082123902eff" class="">Provides the ability to configure security based on different sections or context. This can be global or project level</p><p id="a9fb1840-d624-420a-877f-7134403473bd" class="">
+</p><figure id="e1b0818a-4c4b-4c8d-addf-1af97f0e90ad" class="image"><a href="Jenkins%20and%20Continuous%20Integration%20(%20CI%20)%20Continuo%208e69c4c3957b4924af12090a4e51c2cb/Screen_Shot_2022-10-27_at_23.32.57.png"><img style="width:833px" src="Jenkins%20and%20Continuous%20Integration%20(%20CI%20)%20Continuo%208e69c4c3957b4924af12090a4e51c2cb/Screen_Shot_2022-10-27_at_23.32.57.png"/></a></figure><p id="c2fb448a-0150-4423-a5fd-be3ae95d642c" class="">
+</p><p id="d4a457cc-788b-42fc-9df3-057cd9ee3d0d" class="">Inheritance is selectable from the drop down menu in the project</p><ol type="1" id="8a106d34-7052-4938-bdd8-bf9f48804ae2" class="numbered-list" start="1"><li>The first option, <mark class="highlight-yellow_background"><strong>inherint from parant</strong></mark>, is for project that are in a folder, or are the child of another project. The description of this type is important, as this indicates where permissions can be added in the chain</li></ol><ol type="1" id="82f8f95a-fb3b-41db-a2bc-cc9fce3e3a9c" class="numbered-list" start="2"><li>The second option, <mark class="highlight-yellow_background"><strong>inherit globally defined permissions</strong></mark>, is for project that are in a folder, or are the vhild of another object, but do not wantthe perissions from folder or parent, only global permissions. The description of this type is important as this indicates where permissions can be added in the chain</li></ol><ol type="1" id="ef429fa2-915a-495f-98c0-b2ddc5cf874a" class="numbered-list" start="3"><li>The last option, <mark class="highlight-yellow_background"><strong>do not inherit permissions grants from other ACLs</strong></mark>, prevents this job from inheriting any permissions from eiter the global settings or parent items. The description of this type is important as this indicates where permissions can be added in the chain</li></ol><p id="d09c8f0c-3758-4b33-a0e2-7053d4a0e719" class="">
+</p><h3 id="85001f1c-d0bb-4820-8102-0371b1a608b6" class="">Auditing</h3><ul id="0e3c5bd8-0bff-4e8e-bd20-d02f5db13357" class="bulleted-list"><li style="list-style-type:disc">Is the process of verifying that the access permissions are working as intended</li></ul><ul id="99d2e969-0800-4c48-9d99-1bbd332be36b" class="bulleted-list"><li style="list-style-type:disc">This ensures tha the best practice of least permissions required is maintained</li></ul><ul id="0e3086ae-c66d-4ec3-91de-cdc68cdd672b" class="bulleted-list"><li style="list-style-type:disc">Remember that Jenkins is an explicit allow model and that there is no deny; if something is not explicitly allowed then is denied</li></ul><ul id="8aa6ec7a-0244-4844-9d32-2cfe2cdf5107" class="bulleted-list"><li style="list-style-type:disc">Also, Jenkins permissions are additive and global → parent → job is how those allows are stacked. If something is allowed at a level above , and inheritance is enabled, then it is allowed in the levels below</li></ul><p id="637b040e-966e-4bf3-bc78-d89e3e0621d6" class="">
+</p><h3 id="87aad0ee-5dc9-46f3-93e2-b1220680bfda" class="">Credentials</h3><ul id="77164b34-fdea-490e-9787-150eb8095467" class="bulleted-list"><li style="list-style-type:disc">A credential is any value that provides access to a restricted resource, this is also know as a secrete. These are used by Jenkins to access restricted resources.</li></ul><ul id="4f23c00e-17a0-4749-908f-6942e68f11d3" class="bulleted-list"><li style="list-style-type:disc">Examples of credential types include, username and password SSH username and private key, secret files, secret tokens and certificates</li></ul><ul id="f6d978df-1260-440d-a4ec-121cf251e1f8" class="bulleted-list"><li style="list-style-type:disc">A credential provider is a location that has been configured for Jenkins to retrieve credentials</li></ul><p id="6de14a67-8616-4f43-866b-cbd2ca2a156c" class="">
+</p><h2 id="0754b611-2381-4aa9-b3e5-dec12a73c992" class="">📌  Artifacts and Fingerprints</h2><ul id="e3367e5b-5b14-498b-a7c4-ebc842eb06f4" class="bulleted-list"><li style="list-style-type:disc">An Artifact is an immutable file that is generated during a build or pipeline run</li></ul><ul id="291547db-521a-4949-9826-41cbcc789d0a" class="bulleted-list"><li style="list-style-type:disc">These are used to provide the compiled project to end users, facilitate the testing process, create classes, and prevent rebuilding of known good code</li></ul><ul id="b03d3451-ced3-41e4-a596-2ede24c8a85b" class="bulleted-list"><li style="list-style-type:disc">Artifacts of compiled code are also used as a way to version the software</li></ul><ul id="ef88378c-a91e-4550-8904-a48d466bd0c1" class="bulleted-list"><li style="list-style-type:disc">Artifactss are stored in a repository, fingerprinting is used to determine which build produced that artifact</li></ul><ul id="85ccfa3e-f071-4df5-b58c-78acb6b745a2" class="bulleted-list"><li style="list-style-type:disc">On the Jenkins master the default location of the archive repository is:<ul id="682dd48b-da85-47b3-a0f5-471e8de2ddbc" class="bulleted-list"><li style="list-style-type:circle">Jenkins root/jobs/buildname/builds/lastSuccessfulBuild/archive</li></ul></li></ul><ul id="a555ecf7-f762-4665-b583-a412d6c3122b" class="bulleted-list"><li style="list-style-type:disc">Retention policies can be configured to prevent bloating of the repositories</li></ul><p id="f9ae9a56-853c-4aa2-b11a-a38fb08cba42" class="">
+</p><h3 id="1f9d7338-85a6-4a52-9445-aca1af381787" class="">Fingerprints</h3><ul id="77410498-f298-4fbd-9843-994440d00356" class="bulleted-list"><li style="list-style-type:disc">A globally unique hash that is used to track artifacts or other entities acrss multiple pipelines or projects</li></ul><ul id="95bec7ea-87f2-4ccd-b810-ae6c11e80a8d" class="bulleted-list"><li style="list-style-type:disc">Stored in the Jenkins home directory in the fingerprints directory</li></ul><ul id="080d63a8-7a87-4563-8d52-178ec6773fb0" class="bulleted-list"><li style="list-style-type:disc">In the fingerprint directory the files are stored in a hierarchy that is based on the first character of the check sum<ul id="315f39df-7656-406f-817b-c4ed79282c6b" class="bulleted-list"><li style="list-style-type:circle">/var/lib/jenkins/fingerprints/98/b8 ← first part of the hash</li></ul></li></ul><figure id="28f7f030-a195-47a8-9527-a0f418e60e3a" class="image"><a href="Jenkins%20and%20Continuous%20Integration%20(%20CI%20)%20Continuo%208e69c4c3957b4924af12090a4e51c2cb/Screen_Shot_2022-10-28_at_0.16.17.png"><img style="width:1032px" src="Jenkins%20and%20Continuous%20Integration%20(%20CI%20)%20Continuo%208e69c4c3957b4924af12090a4e51c2cb/Screen_Shot_2022-10-28_at_0.16.17.png"/></a></figure><p id="5ccce16e-d373-4ca6-a3fd-847e7c6b252f" class="">
+</p><h2 id="17ebf199-175c-43da-b7a8-b8cbe72faed2" class="">📌 Introducing the Jenkinsfile</h2><p id="6369e953-7d67-4826-a58e-467cc5549722" class="">Pipeline as code (PaC) describes a set of features that allow Jenkins users to define pipelined job processes with code, stored and versioned in a source repository</p><p id="d02851d7-65c3-4aab-a81d-2e348ad8dd1b" class="">PaC helps you automate the CI/CD workflows in a repeatable, consistent manner, which has many benefits:</p><ul id="67d0aa9d-75ea-4019-b475-5628800021c1" class="bulleted-list"><li style="list-style-type:disc">Speed: You can quickly and easily write a CI/CD workflow for sandbox, staging, and production environments</li></ul><ul id="8ff42d5b-83e1-402c-8606-ec2ee017e83d" class="bulleted-list"><li style="list-style-type:disc">Consistency: PaC completely standardizes the setup of CI/CD</li></ul><ul id="26428173-f1f5-453c-8d02-d8cdd535d19c" class="bulleted-list"><li style="list-style-type:disc">Risk management:<em> </em>Because the pipeline can be version-controlled, PaC allows every change to your CI/CD workflow to be documented, logged, tracked, and tested</li></ul><ul id="61e944ad-786c-4601-b7c0-3d3cd806cfa8" class="bulleted-list"><li style="list-style-type:disc">Efficiency: It minimizes the introduction of human errors and helps your application’s deployment run more smoothly.</li></ul><p id="48e4589b-1715-4178-81dc-54b81cfb942b" class="">To use PaC with Jenkins, projects must contain a file named Jenkinsfile in the code repository top-level folder. This template file contains a set of instructions, or steps, called stages that will be executed on Jenkins every time the development team pushes a new feature to the code repository. Because Jenkinsfile is living along with the source code, we can always pull, edit, and push the Jenkinsfile within source control</p><p id="de763c8d-cf36-4e5e-b91d-b4f6179586ff" class="">
+</p><p id="f8a63f0a-79b8-44bc-8398-6fae7d4dc6ee" class="">Jenkinsfile uses a domain-specific language (DSL) based on the Groovy programming language to define the entire CI/CD workflow</p><p id="69693b12-161a-4596-a436-9185dd67d367" class="">
+</p><figure id="8e417f97-bdc5-4ee2-ba24-c1cc0f1e28f2" class="image"><a href="Jenkins%20and%20Continuous%20Integration%20(%20CI%20)%20Continuo%208e69c4c3957b4924af12090a4e51c2cb/Untitled%209.png"><img style="width:857px" src="Jenkins%20and%20Continuous%20Integration%20(%20CI%20)%20Continuo%208e69c4c3957b4924af12090a4e51c2cb/Untitled%209.png"/></a></figure><p id="f91e3213-611a-4a2a-b107-f37b5d0e8a13" class="">
+</p><p id="29ce0be9-4f60-4da2-aa16-c9ce34bc8e6d" class="">Those phases can be described in a Jenkinsfile by using the <strong>stage </strong>keyword.</p><pre id="72b9a98d-0ce4-4a3f-af78-75b3d13f09ba" class="code"><code>node(&#x27;workers&#x27;){
+    try {
+        stage(&#x27;Checkout&#x27;){
+            checkout scm
+        }
+ 
+        stage(&#x27;Quality Test&#x27;){.
+            echo &quot;Running quality tests&quot;
+        }
+ 
+        stage(&#x27;Unit Test&#x27;){
+            echo &quot;Running unit tests&quot;
+        }
+ 
+        stage(&#x27;Security Test&#x27;).
+            echo &quot;Running security checks&quot;
+        }
+ 
+        stage(&#x27;Build&#x27;){.
+            echo &quot;Building artifact&quot;
+        }
+ 
+        stage(&#x27;Push&#x27;){.
+           echo &quot;Storing artifact&quot;
+        }
+ 
+        stage(&#x27;Deploy&#x27;).
+            echo &quot;Deploying artifact&quot;
+        }
+ 
+        stage(&#x27;Acceptance Tests&#x27;){
+            echo &quot;Running post-integrations tests&quot;
+        }
+    } catch(err){
+        echo &quot;Handling errors&quot;.
+    } finally.
+       echo &quot;Cleaning up&quot;
+    }
+}</code></pre><p id="55e81b07-2167-4437-8462-4cf9ad837308" class=""><mark class="highlight-red_background"><strong>Checkout:</strong></mark><strong> </strong>Pulls the latest changes from the source code repository, which can be GitHub, Bitbucket, Mercurial, or any SCM</p><p id="9606a5e7-2c26-4a19-90c7-6834afdf6a21" class=""><mark class="highlight-red_background"><strong>Quality tests:</strong></mark><mark class="highlight-red_background"> </mark>Contains instructions on how to execute static code analysis to measure code quality, and identify bugs, vulnerabilities, and code smell. It can be automated by integrating external tools like SonarQube</p><p id="9a602dd5-15c3-4cae-af3e-5b8932eeb753" class=""><mark class="highlight-red_background"><strong>Unit tests:</strong></mark><strong> </strong>In this stage, unit tests are executed. If tests are successful, a code coverage report will be generated that can be consumed by Jenkins plugins to show a visual overview of the project’s health and keep track of the code coverage metrics as your project grows.</p><p id="4ba10977-9e8e-439c-87a2-1481aa4cd01f" class=""><mark class="highlight-red_background"><strong>Security tests: </strong></mark>Responsible for identifying project dependencies and checks if any known, publicly disclosed vulnerabilities exist.</p><p id="edf182fd-04f7-4002-bba5-0901627c2ef7" class=""><mark class="highlight-red_background"><strong>Build:</strong></mark><mark class="highlight-red_background"> </mark>In this phase, the needed dependencies will be installed, the source code will be compiled, and an artifact will be built (Docker image, zip file, Maven JAR, and so forth).</p><p id="c16a0990-0299-4999-895a-5c04ab030699" class="">Push: The artifact built in the previous stage will be versioned and stored in a remote repository.</p><p id="afb353b9-70be-44c7-a81a-8973e53e0f0b" class=""><mark class="highlight-red_background"><strong>Deploy: </strong></mark>In this stage, the artifact will be deployed to a sandbox/testing environment for quality assurance or to production after the user has approved the deployment.</p><p id="22ca6dfb-3338-4ae5-82a2-5efe7f26ac57" class=""><mark class="highlight-red_background"><strong>Acceptance tests:</strong></mark> After the changes are deployed, a series of smoke and validation tests will be executed against the deployed application to verify that the application is running as expected.</p><p id="62df0d4d-fe51-4b64-9c27-9239f17c9264" class="">
+</p><p id="ce3c78b7-983a-42f9-955e-8ae1ae4eae35" class="">If any of these stages throws an exception or error, the pipeline build’s status will be set to fail. This default behavior can be overridden by using <mark class="highlight-red_background"><strong>try-catch blocks</strong></mark>. The <mark class="highlight-red_background"><strong>finally block</strong></mark> can be used to clean up the Jenkins workspace (temporary files or build packages) or to execute post-script commands such as sending Slack notifications</p><p id="777df308-a26c-4e34-bce7-7a26acd2dc69" class="">
+</p><h3 id="b586bdfc-4c61-4091-816f-3c3e10066713" class="">Scripted pipeline</h3><p id="b1aa04df-293c-471f-886c-4dd8e37875cf" class="">A scripted pipeline is a traditional way of writing pipeline code. In this pipeline, the Jenkinsfile is written on the Jenkins UI instance. The pipeline steps are wrapped in a node block (denoted by the opening and closing braces). Here, a node refers to a <em>Jenkins agent. </em>The node gets mapped to the Jenkins cluster by using a label.</p><p id="477c1a68-27ef-4e69-84d0-e07b44860362" class="">
+</p><figure id="4b6e76aa-c02b-463f-b5c9-1949b4383325" class="image"><a href="Jenkins%20and%20Continuous%20Integration%20(%20CI%20)%20Continuo%208e69c4c3957b4924af12090a4e51c2cb/Untitled%2010.png"><img style="width:880px" src="Jenkins%20and%20Continuous%20Integration%20(%20CI%20)%20Continuo%208e69c4c3957b4924af12090a4e51c2cb/Untitled%2010.png"/></a></figure><p id="bc2d80fb-40f1-4c38-988c-f154cbcf21f2" class="">
+</p><p id="9e0f8c78-2893-4ac5-9f5f-7d0cec74034e" class="">The steps inside the node block can include and make use of any valid Groovy code. The pipeline can be defined by creating a new pipeline project and typing the code in the Pipeline Editor section</p><p id="ba787fbc-5cda-4499-a4f4-81993a49bd16" class="">
+</p><figure id="c169fe6f-de50-4682-a00b-bca34587d758" class="image"><a href="Jenkins%20and%20Continuous%20Integration%20(%20CI%20)%20Continuo%208e69c4c3957b4924af12090a4e51c2cb/Untitled%2011.png"><img style="width:880px" src="Jenkins%20and%20Continuous%20Integration%20(%20CI%20)%20Continuo%208e69c4c3957b4924af12090a4e51c2cb/Untitled%2011.png"/></a></figure><p id="fd88826d-93f0-4158-8e01-5e13523463ae" class="">
+</p><p id="5120ea2a-5dac-4889-86d1-5b81fc79f8af" class="">A stage is a way to divide the pipeline into logical functional units. It also serves to group steps and Groovy code together to create targeted functionality</p><p id="50439c86-69e8-4ad9-88a0-2b0e5376afc6" class="">
+</p><figure id="8604a9d9-e485-4269-91ec-595ef0b78d39" class="image"><a href="Jenkins%20and%20Continuous%20Integration%20(%20CI%20)%20Continuo%208e69c4c3957b4924af12090a4e51c2cb/Untitled%2012.png"><img style="width:880px" src="Jenkins%20and%20Continuous%20Integration%20(%20CI%20)%20Continuo%208e69c4c3957b4924af12090a4e51c2cb/Untitled%2012.png"/></a></figure><p id="a5473e5a-078e-462f-8e67-5fd9b627bb28" class="">
+</p><p id="7c613b2c-1e08-4c7d-bb13-00f920094d10" class="">The scripted pipeline uses stricter Groovy-based syntaxes. The declarative pipeline was introduced to offer a simpler and more optioned Groovy 
+syntax</p><p id="c0893c4a-f8a9-4f91-b8f6-6f1108e8bcf8" class="">
+</p><h3 id="85d6111a-66f8-4d91-847c-adf095ac84bb" class="">Declarative pipeline</h3><p id="7dad307c-1b1e-486b-949d-1f8931a66e07" class="">A declarative pipeline is relatively new feature, that supports the PaC approach. It makes the pipeline code easier to read and write for new Jenkins users</p><p id="0ba8930a-b1ac-4eb7-9721-d70d919bac09" class="">
+</p><p id="dbc43a35-679f-425b-b391-513ec97da6a5" class="">This code is written in a Jenkinsfile that can be checked into a version-control system. </p><p id="ae1bb43d-efaf-486d-be31-deb509cdf972" class="">
+</p><p id="d1450ffb-835b-4f83-8b53-139644dc5a42" class="">In declarative syntax, you cannot use Groovy code such as variables, loops, or conditions. You are restricted to the structured sections/blocks and the DSL</p><p id="3b177769-a55e-4d57-94d7-a7a6d084059c" class="">
+</p><figure id="94dded24-0991-4496-9f94-c2ac3e437144" class="image"><a href="Jenkins%20and%20Continuous%20Integration%20(%20CI%20)%20Continuo%208e69c4c3957b4924af12090a4e51c2cb/Untitled%2013.png"><img style="width:465px" src="Jenkins%20and%20Continuous%20Integration%20(%20CI%20)%20Continuo%208e69c4c3957b4924af12090a4e51c2cb/Untitled%2013.png"/></a></figure><p id="5b52953e-2468-443a-9b8c-3d4dd0b2d9cf" class="">
+</p><p id="5c8dce46-153a-4d16-b5fb-141ef166b894" class="">Declarative pipelines provide a more restrictive syntax, as each pipeline must use these predefined block attributes or sections:</p><ul id="1d1f6dd4-3e3b-4f90-ac0b-c13320c8036e" class="block-color-gray_background bulleted-list"><li style="list-style-type:disc"><mark class="highlight-gray_background"><code>agent</code></mark></li></ul><ul id="b10ca075-d62e-433f-99e1-b23ad01b4fd0" class="block-color-gray_background bulleted-list"><li style="list-style-type:disc"><mark class="highlight-gray_background"><code>environment</code></mark></li></ul><ul id="b197476d-6a39-42a4-b8ac-2165f4d4a1b9" class="block-color-gray_background bulleted-list"><li style="list-style-type:disc"><mark class="highlight-gray_background"><code>post</code></mark></li></ul><ul id="8a50ffd1-1f72-4772-b5d4-335a48eb053f" class="block-color-gray_background bulleted-list"><li style="list-style-type:disc"><mark class="highlight-gray_background"><code>stages</code></mark></li></ul><ul id="6edaaa02-91a4-4da8-99b8-d28a3c223e02" class="block-color-gray_background bulleted-list"><li style="list-style-type:disc"><mark class="highlight-gray_background"><code>steps</code></mark></li></ul><p id="7c74d38d-dec7-48e1-adbe-ccc77308466d" class="">
+</p><ul id="9beab19a-f47d-4e94-a1dd-28f2b396fa06" class="toggle"><li><details open=""><summary>The <strong><mark class="highlight-red_background">agent </mark></strong>section </summary><p id="e5f43d2e-dd50-462d-bc1f-eae8490316f6" class="">Defnes the worker or machine where teh pipeline will be execuetd. The agent can be any of the following:</p><ul id="2786e8dd-c759-4a8f-8a65-2efcd4aba7b7" class="bulleted-list"><li style="list-style-type:disc">Jenkins worker or node</li></ul><ul id="4d9ea473-3893-4181-bab7-ec45c715482c" class="bulleted-list"><li style="list-style-type:disc">Docker container</li></ul><ul id="baa13762-505e-47cb-8f7b-729f5d05bcb8" class="bulleted-list"><li style="list-style-type:disc">Pod deployed on a Kubernetes cluster</li></ul><pre id="98529cb7-beaf-4ec9-a641-7fb9094cd2cf" class="code"><code>pipeline{
+    agent {
+        node {
+            label &#x27;workers&#x27;
+        }
+ 
+        dockerfile {
+            filename &#x27;Dockerfile&#x27;
+            label &#x27;workers&#x27;
+        }
+ 
+        kubernetes {
+            label &#x27;workers&#x27;
+            yaml &quot;&quot;&quot;
+            kind: Pod
+            metadata:
+            name: jenkins-worker
+            spec:
+            containers:
+            - name: nodejs
+              image: node:lts
+              tty: true
+            &quot;&quot;&quot;
+        }
+    }
+}</code></pre></details></li></ul><ul id="65c5ace7-9329-4d7d-ba88-00a985c811b4" class="toggle"><li><details open=""><summary>The <mark class="highlight-red_background"><strong>environment</strong></mark> section </summary><p id="25a73ae5-6319-4d20-9b17-dafcf1d3f298" class="">Contains a set of environnment variables needed to run the pipeline steps. These variables can be defined as sequence of key-value pairs. You can also reference credential variables by using a helper method <mark class="highlight-red_background"><strong>credentials()</strong></mark></p><pre id="6c19884f-8df0-447a-b91b-ac763d2ecc93" class="code"><code>pipeline{
+    environment {
+        REGISTRY_CREDENTIALS= credentials(&#x27;DOCKER_REGISTRY&#x27;)
+        REGISTRY_URL = &#x27;https://registry.domain.com&#x27;
+    }
+ 
+    stages {
+        stage(&#x27;Push&#x27;){
+            steps{
+                sh &#x27;docker login $REGISTRY_URL --username $REGISTRY_CREDENTIALS_USR --password $REGISTRY_CREDENTIALS_PSW&#x27;
+            }
+        }
+    }
+}</code></pre></details></li></ul><ul id="58fca095-dcf1-4534-a1b0-85aac5f9404f" class="toggle"><li><details open=""><summary>The <mark class="highlight-red_background"><strong>post</strong></mark><strong> </strong>section </summary><p id="4b85d372-3562-456a-a10a-4811fcaaecce" class="">Contains commands or scripts that will be run upon the completion of a pipeline or stage run, dependinng on the location of this section within the pipeline. Conventionally the <mark class="highlight-red_background"><strong>post</strong></mark><strong> </strong>section should be placed at the end of the pipeline. Examples of commands that can be used within the<strong> </strong><mark class="highlight-red_background"><strong>post</strong></mark><strong> </strong>section are those that provide Slack notifications, clean up the job wokspace and execute post-scripts based on the build status. The pipeline build status can be fetched by using either the <mark class="highlight-red_background"><strong>currenBuild.result</strong></mark> variable or the post-condition blocks <mark class="highlight-red_background"><strong>always, success, unstable, failure</strong></mark><mark class="highlight-red_background">. </mark>The instructiton erapped by the <mark class="highlight-red_background"><strong>always</strong></mark> directive will run no matter the status of the build </p><pre id="5c87413e-8b6b-4d9b-9041-c1cf37d8b29c" class="code"><code>pipeline{
+    post {
+        always {
+            echo &#x27;Cleaning up workspace&#x27;
+        }
+        success {
+            slackSend (color: &#x27;GREEN&#x27;, message: \
+                &quot;${env.JOB_NAME} Successful build&quot;)
+        }
+        failure {
+           slackSend (color: &#x27;RED&#x27;, message: &quot;${env.JOB_NAME} Failed build&quot;)
+        }
+    }
+}</code></pre></details></li></ul><ul id="5a0b55e4-5a79-426e-8a2c-ab70be77bbf6" class="toggle"><li><details open=""><summary>The <mark class="highlight-red_background"><strong>stages</strong></mark> section</summary><p id="7157e276-e40c-4faf-ae80-437a5abbdd81" class="block-color-gray_background">Is the core of the pipeline. This section defines what is to be done at a high level. It cntaines a sequence of more stage directives for each discrete part of the CI/CD workflow</p></details></li></ul><ul id="5d45699c-ec78-4245-8a84-e77c993ec754" class="toggle"><li><details open=""><summary>The <mark class="highlight-red_background"><strong>steps </strong></mark>section</summary><p id="c50958ed-1e8d-424f-adc6-1d1892e1d68a" class="">Contains a series of more steps to be executed in a given stage directive</p><pre id="43970cff-c131-4b59-b848-bd77c6c18cf2" class="code"><code>pipeline{
+    agent any
+    stages {
+        stage(&#x27;Test&#x27;){
+            steps {
+                sh &#x27;npm run test&#x27;
+                sh &#x27;npm run coverage&#x27;
+            }
+        }
+    }
+}</code></pre></details></li></ul><p id="21c75461-067e-4019-bd5a-7a91bc987add" class="">
+</p><h3 id="78f9ecc1-c453-4c85-8f77-1fe3c18d0054" class="">Test-driven development with Jenkins</h3><p id="5c6574a6-6a6c-425d-96c6-7722d2f7b08d" class="">Using Jenkinsfiles has one potential downside: it can be more challenging to discover problems up-front when you are working in the external file and not in the environment of the Jenkins server</p><ul id="02ff84a1-3b88-4975-916f-4794d5d4269d" class="bulleted-list"><li style="list-style-type:disc">One approach to dealing with this is developing the code within the Jenkins server as a pipeline project first. Then, you can convert it to a Jenkinsfile afterward. You can also use Blue Ocean mode as a playground</li></ul><ul id="0ab9e8bb-3c7c-4a22-972a-479e48861ad2" class="bulleted-list"><li style="list-style-type:disc">Another approach to test a new pipeline is a declarative pipeline linter application that you can run against Jenkinsfiles, outside Jenkins, to detect problems early.<ul id="5a32a9b2-40cb-43fb-a5b2-e074fd2ff46c" class="bulleted-list"><li style="list-style-type:circle"><strong>Jenkins Replay Button:  </strong>The Replay button feature allows for quick modifications and execution of an existing pipeline without changing the pipeline configuration or creating a new commit</li></ul><ul id="0896adfb-8934-4d36-b2c5-3e7512dc205a" class="bulleted-list"><li style="list-style-type:circle"><strong>Command-line pipeline linter: </strong>For advanced users, you can use the Jenkins RESTful API to validate the Jenkinsfile syntax by issuing an HTTP/HTTPS POST request. To get the API endpoint working on a Jenkins server with cross-site request forgery (CSRF) protection enabled, you need to request a crumb issuer and include it in the Authorization header in the issued HTTP request</li></ul><ul id="2f8a0a4c-0441-4cd0-9e89-b4e1ef6ce4ed" class="bulleted-list"><li style="list-style-type:circle">To get the crumb: Configure → API Token → Add new Token (copy)</li></ul><pre id="25ff38f9-0378-41d3-8b7b-e23cbf3d55a9" class="code"><code>curl -s -u &lt;username&gt;:&lt;api_token&gt; http://&lt;jenkins-server-address&gt;:&lt;port&gt;/crumbIssuer/api/json</code></pre></li></ul><ul id="f9c02a56-2643-4604-9ce6-6a5f62d2ddd1" class="bulleted-list"><li style="list-style-type:disc"><strong>IDE Integrations: </strong>You can install extensions on your favorite integrated development environment (IDE) to automate the validation process. On Visual Studio Code (VSCode), you can install Jenkins Validation Linter. This extension validates Jenkinsfiles by sending them to the Pipeline Linter endpoint of a Jenkins server. <p id="45d0cf5e-dcea-4b2c-8dd0-9eb6b49a1ba2" class="">
+</p><figure id="3caf0002-c13c-458c-932b-8f2e90deb4c1" class="image"><a href="Jenkins%20and%20Continuous%20Integration%20(%20CI%20)%20Continuo%208e69c4c3957b4924af12090a4e51c2cb/Untitled%2014.png"><img style="width:1100px" src="Jenkins%20and%20Continuous%20Integration%20(%20CI%20)%20Continuo%208e69c4c3957b4924af12090a4e51c2cb/Untitled%2014.png"/></a></figure></li></ul><p id="f3775913-ccb8-48e8-95b4-6194a5870bb5" class=""><div class="indented"><p id="4e601b11-2ed2-426b-9f73-a88804cc9a1a" class="">Once the extension is installed, you must provide Jenkins server settings, including the server URL (with the following format: <strong>(</strong><mark class="highlight-red_background"><strong>JENKINS_URL/pipeline_model_converter/validate</strong></mark><strong>)</strong> and credentials (Jenkins username and password, or token if CSRF protection is enabled)</p><p id="cea13786-f6bb-47f6-ba09-f178f132dd42" class="">Once settings are configured, you can type the Validate Jenkinsfile command on the command palette search bar</p><figure id="a1b08735-b534-47f1-bf89-2f26527f7e70" class="image"><a href="Jenkins%20and%20Continuous%20Integration%20(%20CI%20)%20Continuo%208e69c4c3957b4924af12090a4e51c2cb/Untitled%2015.png"><img style="width:704px" src="Jenkins%20and%20Continuous%20Integration%20(%20CI%20)%20Continuo%208e69c4c3957b4924af12090a4e51c2cb/Untitled%2015.png"/></a></figure><p id="dacfd60c-6ce9-425a-8ce4-377af6e062a3" class="">
+</p><p id="402b0ffd-1e15-4b6e-9fed-bd439e78c9b3" class="">The linter will report the pipeline validation results in the terminal</p><figure id="ef64709e-ba51-4772-b36d-d79eac177e7a" class="image"><a href="Jenkins%20and%20Continuous%20Integration%20(%20CI%20)%20Continuo%208e69c4c3957b4924af12090a4e51c2cb/Untitled%2016.png"><img style="width:880px" src="Jenkins%20and%20Continuous%20Integration%20(%20CI%20)%20Continuo%208e69c4c3957b4924af12090a4e51c2cb/Untitled%2016.png"/></a></figure></div></p></div></article></body></html>
